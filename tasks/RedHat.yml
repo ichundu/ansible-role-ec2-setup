@@ -14,7 +14,7 @@
 
 - name: Import epel rpm gpg key
   rpm_key:
-    name: "{{ epel_rpm_gpg }}"
+    key: "{{ epel_rpm_gpg }}"
 
 - name: Set timezone | RHEL 7
   timezone:
