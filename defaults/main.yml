@@ -1,0 +1,11 @@
+---
+# defaults file for ec2-setup
+
+ec2_setup_python:
+  - libselinux-python
+  - libsemanage-python
+
+ec2_setup_timezone: "Europe/Berlin"
+
+epel_repo: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
+epel_rpm_gpg: "/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}"

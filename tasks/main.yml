@@ -1,0 +1,6 @@
+---
+# tasks file for ec2-setup
+
+- include: RedHat.yml
+  static: no
+  when: ansible_os_family == 'RedHat'

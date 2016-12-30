@@ -1,0 +1,34 @@
+---
+# tasks file for ec2-setup | RHEL
+
+- name: Install python selinux libraries
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ ec2_setup_python }}"
+
+- name: Install epel repository
+  yum:
+    name: "{{ epel_repo }}"
+    state: present
+
+- name: Import epel rpm gpg key
+  rpm_key:
+    name: "{{ epel_rpm_gpg }}"
+
+- name: Set timezone | RHEL 7
+  timezone:
+    name: "{{ ec2_setup_timezone }}"
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_distribution_major_version == "7"
+
+- name: Set timezone | RHEL 6
+  file:
+    src: "/usr/share/zoneinfo/{{ ec2_setup_timezone }}"
+    dest: /etc/localtime
+    force: yes
+    state: link
+  when:
+    - ansible_os_family == "RedHat"
+    - ansible_distribution_major_version == "6"
