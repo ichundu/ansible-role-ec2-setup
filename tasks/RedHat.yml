@@ -11,10 +11,12 @@
   yum:
     name: "{{ epel_repo }}"
     state: present
+  when: ec2_setup_epel
 
 - name: Import epel rpm gpg key
   rpm_key:
     key: "{{ epel_rpm_gpg }}"
+  when: ec2_setup_epel
 
 - name: Set timezone | RHEL 7
   timezone:

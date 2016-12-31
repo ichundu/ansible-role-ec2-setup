@@ -17,6 +17,7 @@ Default variables:
 |-----------|-------------------|-------------------|
 | `ec2_setup_python` | `[ libselinux-python, libsemanage-python ]` | Selinux python libraries |
 | `ec2_setup_timezone` | `Europe/Berlin` | System timezone |
+| `ec2_setup_epel` | `yes` | Wether or not to install epel repository |
 | `epel_repo` | `https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm` | Epel repository rpm url, substitute with `epel-release` on CentOS systems |
 | `epel_rpm_gpg` | `/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}` | Epel rpm GPG key to import |
 
