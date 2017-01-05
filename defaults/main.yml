@@ -6,7 +6,3 @@ ec2_setup_python:
   - libsemanage-python
 
 ec2_setup_timezone: "Europe/Berlin"
-
-ec2_setup_epel: yes
-epel_repo: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
-epel_rpm_gpg: "/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ ansible_distribution_major_version }}"
