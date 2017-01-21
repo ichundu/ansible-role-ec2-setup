@@ -5,21 +5,11 @@
   yum:
     name: "{{ item }}"
     state: present
-  with_items: "{{ ec2_setup_python }}"
+  with_items: "{{ ec2_setup_python_redhat }}"
 
-- name: Set timezone | RHEL 7
-  timezone:
-    name: "{{ ec2_setup_timezone }}"
-  when:
-    - ansible_os_family == "RedHat"
-    - ansible_distribution_major_version == "7"
-
-- name: Set timezone | RHEL 6
+- name: Set timezone
   file:
     src: "/usr/share/zoneinfo/{{ ec2_setup_timezone }}"
     dest: /etc/localtime
     force: yes
     state: link
-  when:
-    - ansible_os_family == "RedHat"
-    - ansible_distribution_major_version == "6"

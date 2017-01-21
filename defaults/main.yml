@@ -1,7 +1,7 @@
 ---
 # defaults file for ec2-setup
 
-ec2_setup_python:
+ec2_setup_python_redhat:
   - libselinux-python
   - libsemanage-python
 
