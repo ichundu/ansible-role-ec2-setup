@@ -1,6 +1,6 @@
 galaxy_info:
   author: ichundu
-  description: ansible enthusiast
+  description: Enable epel repository in RedHat family systems
 
   # If the issue tracker for your role is not on github, uncomment the
   # next line and provide a value
@@ -13,7 +13,7 @@ galaxy_info:
   # - GPLv3
   # - Apache
   # - CC-BY
-  license: license (GPLv2, CC-BY, etc)
+  license: GPLv2
 
   min_ansible_version: 2.2
 
@@ -219,5 +219,4 @@ galaxy_info:
     # NOTE: A tag is limited to a single word comprised of
     # alphanumeric characters. Maximum 20 tags per role.
 
-dependencies:
-  - { role: ichundu.epel, tags: epel }
+dependencies: []

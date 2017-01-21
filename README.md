@@ -21,7 +21,7 @@ Default variables:
 Dependencies
 ------------
 
-Role `ichundu.epel` for enabling the EPEL repository is included as a dependency but is optional.
+None.
 
 Example Playbook
 ----------------
