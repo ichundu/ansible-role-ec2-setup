@@ -15,7 +15,7 @@ Default variables:
 
 | Name		| Default value		| Description		|
 |-----------|-------------------|-------------------|
-| `ec2_setup_python` | `[ libselinux-python, libsemanage-python ]` | Selinux python libraries |
+| `ec2_setup_packages` | `[ libselinux-python, libsemanage-python, vim, htop, bash-completion, rng-tools ]` | Basic packages that should be installed on every new instance |
 | `ec2_setup_timezone` | `Europe/Berlin` | System timezone |
 
 Dependencies

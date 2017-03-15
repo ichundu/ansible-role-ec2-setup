@@ -1,8 +1,20 @@
 ---
 # defaults file for ec2-setup
 
-ec2_setup_python_redhat:
+# Whether to reboot instance after initial setup or not
+rebootrequired: false
+
+# Whether to enable EPEL repo
+ec2_setup_epel: true
+
+# Basic packages that should be present on new systems
+ec2_setup_packages:
   - libselinux-python
   - libsemanage-python
+  - vim
+  - htop
+  - bash-completion
+  - rng-tools
 
+# Instance timezone
 ec2_setup_timezone: "Europe/Berlin"
