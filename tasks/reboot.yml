@@ -22,7 +22,7 @@
     search_regex: OpenSSH
     port: 22
     timeout: 150
-    delay: 20
+    delay: 50
   become: no
   when: rebootrequired
 
