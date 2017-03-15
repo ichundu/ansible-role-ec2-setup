@@ -16,5 +16,9 @@ ec2_setup_packages:
   - bash-completion
   - rng-tools
 
+ec2_setup_selinux:
+  - policy: targeted
+    state: enforcing
+
 # Instance timezone
 ec2_setup_timezone: "Europe/Berlin"
