@@ -1,0 +1,3 @@
+---
+
+ec2_setup_epel_pkg: "epel-release"
