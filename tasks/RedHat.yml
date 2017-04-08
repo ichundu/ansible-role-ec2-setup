@@ -47,6 +47,7 @@
   register: ec2_setup_update
   when: rebootrequired
 
+# The list of packages that require a reboot after update:
 # https://access.redhat.com/solutions/27943
 - include: reboot.yml
   when:
