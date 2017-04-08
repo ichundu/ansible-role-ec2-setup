@@ -1,11 +1,11 @@
 ---
 # Run this playbook if we call for a reboot
 
-- name: Reassure that reboot is required
+- name: Reassure that reboot is required.
   assert:
     that: rebootrequired
 
-- name: Confirm when ready to reboot
+- name: Confirm when ready to reboot.
   pause:
 
 - name: EL5/EL6 | Reboot host if we call for a reboot
@@ -14,7 +14,7 @@
     - ansible_os_family == "RedHat"
     - ansible_distribution_major_version | version_compare('6', '<=')
 
-- name: EL7 | Reboot host if we call for a reboot
+- name: EL7 | Reboot host if we call for a reboot.
   command: /usr/bin/systemd-run --on-active=10 /usr/bin/systemctl reboot
   async: 0
   poll: 0
@@ -22,7 +22,7 @@
     - ansible_os_family == "RedHat"
     - ansible_distribution_major_version | version_compare('7', '=')
 
-- name: Wait for host to come up
+- name: Wait for host to come up.
   local_action:
     module: wait_for
     host: "{{ inventory_hostname }}"
@@ -32,7 +32,7 @@
     delay: 20
   become: no
 
-- name: Display OS information after reboot
+- name: Display OS information after reboot.
   debug:
     msg:
       - "Rebooted: {{ rebootrequired }}"
