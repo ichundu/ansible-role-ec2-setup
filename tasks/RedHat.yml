@@ -31,12 +31,31 @@
     dest: /etc/localtime
     force: yes
     state: link
+  when: ec2_setup_timezone is defined
 
-- name: Update system
+- name: Display OS info before update
+  debug:
+    msg:
+      - "OS: {{ ansible_distribution }}"
+      - "Release: {{ ansible_distribution_version }}"
+      - "Platform: {{ ansible_product_name }}"
+
+- name: Run system update
   yum:
     name: "*"
     state: latest
+  register: ec2_setup_update
   when: rebootrequired
 
 - include: reboot.yml
-  when: rebootrequired
+  when:
+    - rebootrequired
+    - ec2_setup_update | changed
+    - ( "'kernel' in ec2_setup_update.results" ) or
+      ( "'firmware' in ec2_setup_update.results" ) or
+      ( "'systemd' in ec2_setup_update.results" ) or
+      ( "'upstart' in ec2_setup_update.results" ) or
+      ( "'sysvinit' in ec2_setup_update.results" ) or
+      ( "'udev' in ec2_setup_update.results" ) or
+      ( "'glibc' in ec2_setup_update.results" ) or
+      ( "'hal-' in ec2_setup_update.results" )

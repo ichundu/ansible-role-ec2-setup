@@ -2,10 +2,10 @@
 # defaults file for ec2-setup
 
 # Whether to reboot instance after initial setup or not
-rebootrequired: false
+rebootrequired: False
 
 # Whether to enable EPEL repo
-ec2_setup_epel: true
+ec2_setup_epel: True
 
 # Basic packages that should be present on new systems
 ec2_setup_packages:
@@ -15,10 +15,12 @@ ec2_setup_packages:
   - htop
   - bash-completion
   - rng-tools
+  - telnet
+  - nmap
 
 ec2_setup_selinux:
   - policy: targeted
     state: enforcing
 
 # Instance timezone
-ec2_setup_timezone: "Europe/Berlin"
+ec2_setup_timezone: []

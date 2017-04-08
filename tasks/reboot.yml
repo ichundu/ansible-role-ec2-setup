@@ -1,10 +1,17 @@
 ---
-# Run these tasks if we call for a reboot
+# Run this playbook if we call for a reboot
+
+- name: Reassure that reboot is required
+  assert:
+    that: rebootrequired
+
+- name: Confirm when ready to reboot
+  pause:
 
 - name: EL5/EL6 | Reboot host if we call for a reboot
   shell: sleep 5 ; /sbin/shutdown -r ; echo &
   when:
-    - rebootrequired
+    - ansible_os_family == "RedHat"
     - ansible_distribution_major_version | version_compare('6', '<=')
 
 - name: EL7 | Reboot host if we call for a reboot
@@ -12,20 +19,23 @@
   async: 0
   poll: 0
   when:
-    - rebootrequired
+    - ansible_os_family == "RedHat"
     - ansible_distribution_major_version | version_compare('7', '=')
 
-- name: Wait for host sshd if we call for a reboot
+- name: Wait for host to come up
   local_action:
     module: wait_for
     host: "{{ inventory_hostname }}"
     search_regex: OpenSSH
     port: 22
-    timeout: 150
-    delay: 50
+    timeout: 90
+    delay: 20
   become: no
-  when: rebootrequired
 
-- name: Display conditionals for this request
+- name: Display OS information after reboot
   debug:
-    msg: "rebootrequired is {{ rebootrequired }} and ansible_os_family is {{ ansible_os_family }} and ansible_distribution_major_version is {{ ansible_distribution_major_version }}"
+    msg:
+      - "Rebooted: {{ rebootrequired }}"
+      - "OS: {{ ansible_distribution }}"
+      - "Release: {{ ansible_distribution_version }}"
+      - "Platform: {{ ansible_product_name }}"
