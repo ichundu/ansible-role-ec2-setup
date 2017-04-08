@@ -1,19 +1,19 @@
 ---
 # tasks file for ec2-setup | RHEL
 
-- name: Include distro-specific variables.
+- name: Include distro-specific variables
   include_vars: "{{ item }}"
   with_first_found:
     - "{{ ansible_distribution }}.yml"
     -  default.yml
 
-- name: Enable EPEL repository.
+- name: Enable EPEL repository
   yum:
     name: "{{ ec2_setup_epel_pkg }}"
     state: present
   when: ec2_setup_epel
 
-- name: Install various packages.
+- name: Install various packages
   yum:
     name: "{{ item }}"
     state: present
@@ -25,7 +25,7 @@
     state: "{{ item.state }}"
   with_items: "{{ ec2_setup_selinux }}"
 
-- name: Set timezone.
+- name: Set timezone
   file:
     src: "/usr/share/zoneinfo/{{ ec2_setup_timezone }}"
     dest: /etc/localtime
@@ -33,29 +33,30 @@
     state: link
   when: ec2_setup_timezone is defined
 
-- name: Display OS info before update.
+- name: Display OS info before update
   debug:
     msg:
       - "OS: {{ ansible_distribution }}"
       - "Release: {{ ansible_distribution_version }}"
       - "Platform: {{ ansible_product_name }}"
 
-- name: Run system update.
+- name: Run system update
   yum:
     name: "*"
     state: latest
   register: ec2_setup_update
   when: rebootrequired
 
+# https://access.redhat.com/solutions/27943
 - include: reboot.yml
   when:
     - rebootrequired
     - ec2_setup_update | changed
-    - ( "'kernel' in ec2_setup_update.results" ) or
-      ( "'firmware' in ec2_setup_update.results" ) or
-      ( "'systemd' in ec2_setup_update.results" ) or
-      ( "'upstart' in ec2_setup_update.results" ) or
-      ( "'sysvinit' in ec2_setup_update.results" ) or
-      ( "'udev' in ec2_setup_update.results" ) or
-      ( "'glibc' in ec2_setup_update.results" ) or
-      ( "'hal-' in ec2_setup_update.results" )
+    - ( "kernel-" in item" ) or
+      ( "-firmware-" in item" ) or
+      ( "systemd-" in item" ) or
+      ( "upstart-" in item" ) or
+      ( "sysvinit-" in item" ) or
+      ( "glibc-" in item" ) or
+      ( "hal-" in item" )
+  with_items: "{{ ec2_setup_update.results }}"

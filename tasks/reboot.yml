@@ -1,11 +1,11 @@
 ---
 # Run this playbook if we call for a reboot
 
-- name: Reassure that reboot is required.
+- name: Reassure that reboot is required
   assert:
     that: rebootrequired
 
-- name: Confirm when ready to reboot.
+- name: Confirm when ready to reboot
   pause:
 
 - name: EL5/EL6 | Reboot host if we call for a reboot
@@ -22,15 +22,18 @@
     - ansible_os_family == "RedHat"
     - ansible_distribution_major_version | version_compare('7', '=')
 
-- name: Wait for host to come up.
+- name: Wait for rebooted host/s to come up
   local_action:
     module: wait_for
     host: "{{ inventory_hostname }}"
     search_regex: OpenSSH
     port: 22
-    timeout: 90
+    timeout: 120
     delay: 20
   become: no
+
+- name: Re-gather facts for rebooted host/s
+  setup:
 
 - name: Display OS information after reboot.
   debug:
@@ -38,4 +41,5 @@
       - "Rebooted: {{ rebootrequired }}"
       - "OS: {{ ansible_distribution }}"
       - "Release: {{ ansible_distribution_version }}"
+      - "Architecture: {{ ansible_architecture }}"
       - "Platform: {{ ansible_product_name }}"
