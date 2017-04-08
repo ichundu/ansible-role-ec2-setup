@@ -1,7 +1,7 @@
 Role Name: ec2-setup
 ====================
 
-Initial basic configuration after provisioning an ec2 instance.
+Initial basic setup after provisioning an ec2 instance.
 
 Requirements
 ------------
@@ -15,6 +15,8 @@ Default variables:
 
 | Name		| Default value		| Description		|
 |-----------|-------------------|-------------------|
+| `rebootrequired` | `False` | Whether to reboot instance after setup or not |
+| `ec2_setup_epel` | `True` | Whether to enable the EPEL repository |
 | `ec2_setup_packages` | `[ libselinux-python, libsemanage-python, vim, htop, bash-completion, rng-tools ]` | Basic packages that should be installed on every new instance |
 | `ec2_setup_timezone` | `Europe/Berlin` | System timezone |
 
