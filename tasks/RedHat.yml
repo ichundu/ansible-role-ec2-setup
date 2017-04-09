@@ -53,11 +53,11 @@
   when:
     - rebootrequired
     - ec2_setup_update | changed
-    - ( "kernel-" in item" ) or
-      ( "-firmware-" in item" ) or
-      ( "systemd-" in item" ) or
-      ( "upstart-" in item" ) or
-      ( "sysvinit-" in item" ) or
-      ( "glibc-" in item" ) or
-      ( "hal-" in item" )
+    - ( "kernel" in item ) or
+      ( "-firmware-" in item ) or
+      ( "systemd" in item ) or
+      ( "upstart" in item ) or
+      ( "sysvinit" in item ) or
+      ( "glibc" in item ) or
+      ( "hal-" in item )
   with_items: "{{ ec2_setup_update.results }}"
