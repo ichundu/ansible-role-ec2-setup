@@ -28,9 +28,11 @@ None.
 Example Playbook
 ----------------
 
+```yaml
     - hosts: servers
       roles:
          - { role: ec2-setup, ec2_timezone: "Europe/Amsterdam" }
+```
 
 License
 -------
