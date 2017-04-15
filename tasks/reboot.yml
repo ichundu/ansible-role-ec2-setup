@@ -5,9 +5,6 @@
   assert:
     that: rebootrequired
 
-- name: Confirm when ready to reboot
-  pause:
-
 - name: EL5/EL6 | Reboot host if we call for a reboot
   shell: sleep 5 ; /sbin/shutdown -r ; echo &
   when:
