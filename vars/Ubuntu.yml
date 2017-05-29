@@ -1,0 +1,11 @@
+---
+
+osbootstrap_packages:
+  - aptitude
+  - vim
+  - htop
+  - bash-completion
+  - rng-tools
+  - telnet
+  - nmap
+  - facter

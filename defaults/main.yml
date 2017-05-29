@@ -1,26 +1,24 @@
 ---
-# defaults file for ec2-setup
+# defaults file for os-bootstrap
 
 # Whether to reboot instance after initial setup or not
-rebootrequired: False
+reboot: False
 
-# Whether to enable EPEL repo
-ec2_setup_epel: True
+# EPEL repo for EL family systems
+osbootstrap_epel: True
+osbootstrap_epel_url: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ansible_distribution_major_version }}.noarch.rpm"
+osbootstrap_epel_repo: "{{ osbootstrap_epel_url if ansible_distribution == 'RedHat' else 'epel-release' }}"
 
-# Basic packages that should be present on new systems
-ec2_setup_packages:
-  - libselinux-python
-  - libsemanage-python
-  - vim
-  - htop
-  - bash-completion
-  - rng-tools
-  - telnet
-  - nmap
+# Basic packages that should be present on new systems (OS-specific variable)
+osbootstrap_packages: []
 
-ec2_setup_selinux:
+# Default SELinux state on EL systems
+osbootstrap_selinux:
   - policy: targeted
     state: enforcing
 
 # Instance timezone
-ec2_setup_timezone: []
+osbootstrap_timezone: []
+
+# IP address of target host used in wait_for task
+osbootstrap_host: "{{ inventory_hostname }}"

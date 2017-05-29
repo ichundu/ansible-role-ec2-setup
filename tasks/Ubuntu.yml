@@ -1,0 +1,20 @@
+---
+
+- name: Ubuntu | Run system update
+  apt:
+    upgrade: safe
+    update_cache: true
+  when: reboot
+  register: apt_result
+
+- name: Ubuntu | Check if reboot is needed after system update
+  stat:
+    path: /var/run/reboot-required
+  register: apt_reboot_required
+
+- name: Ubuntu | Reboot target host if needed
+  include: reboot.yml
+  when:
+    - reboot
+    - apt_result | changed
+    - apt_reboot_required.stat.exists

@@ -1,3 +1,16 @@
 ---
 
-ec2_setup_epel_pkg: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
+osbootstrap_packages:
+  - libselinux-python
+  - libsemanage-python
+  - yum-utils
+  - vim-enhanced
+  - rng-tools
+  - telnet
+  - nmap
+  - unzip
+
+osbootstrap_epel_packages:
+  - htop
+  - bash-completion
+  - facter

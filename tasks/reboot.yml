@@ -1,41 +1,45 @@
 ---
 # Run this playbook if we call for a reboot
 
-- name: Reassure that reboot is required
+- name: Reassure we called for a reboot
   assert:
-    that: rebootrequired
+    that: reboot
 
-- name: EL5/EL6 | Reboot host if we call for a reboot
+- name: Reboot host if we call for a reboot (via /sbin/shutdown)
   shell: sleep 5 ; /sbin/shutdown -r ; echo &
-  when:
-    - ansible_os_family == "RedHat"
-    - ansible_distribution_major_version | version_compare('6', '<=')
+  when: ansible_service_mgr != "systemd"
 
-- name: EL7 | Reboot host if we call for a reboot.
-  command: /usr/bin/systemd-run --on-active=10 /usr/bin/systemctl reboot
+- name: Reboot host if we call for a reboot (via systemd)
+  command: systemd-run --on-active=10 systemctl reboot
   async: 0
   poll: 0
-  when:
-    - ansible_os_family == "RedHat"
-    - ansible_distribution_major_version | version_compare('7', '=')
+  when: ansible_service_mgr == "systemd"
 
 - name: Wait for rebooted host/s to come up
   local_action:
     module: wait_for
-    host: "{{ inventory_hostname }}"
-    search_regex: OpenSSH
+    host: "{{ osbootstrap_host | default(inventory_hostname) }}"
     port: 22
-    timeout: 120
-    delay: 20
+    search_regex: "OpenSSH"
+    timeout: 200
+    delay: 30
   become: no
+
+- name: Refresh inventory
+  meta: refresh_inventory
 
 - name: Re-gather facts for rebooted host/s
   setup:
+  register: setup_task_result
+  retries: 50
+  delay: 5
+  until: setup_task_result | success
+  ignore_errors: true
 
 - name: Display OS information after reboot.
   debug:
     msg:
-      - "Rebooted: {{ rebootrequired }}"
+      - "Rebooted: {{ reboot }}"
       - "OS: {{ ansible_distribution }}"
       - "Release: {{ ansible_distribution_version }}"
       - "Architecture: {{ ansible_architecture }}"

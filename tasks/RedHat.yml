@@ -1,63 +1,64 @@
 ---
-# tasks file for ec2-setup | RHEL
+# tasks file for ec2-bootstrap | RHEL
 
-- name: Include distro-specific variables
-  include_vars: "{{ item }}"
-  with_first_found:
-    - "{{ ansible_distribution }}.yml"
-    -  default.yml
-
-- name: Enable EPEL repository
+- name: EL | Enable EPEL repository
   yum:
-    name: "{{ ec2_setup_epel_pkg }}"
+    name: "{{ osbootstrap_epel_repo }}"
     state: present
-  when: ec2_setup_epel
+  when: osbootstrap_epel
 
-- name: Install various packages
+- name: EL | Install various packages from EPEL
   yum:
     name: "{{ item }}"
     state: present
-  with_items: "{{ ec2_setup_packages }}"
+    enablerepo: epel
+  with_items: "{{ osbootstrap_epel_packages }}"
+  when: osbootstrap_epel
 
-- name: Configure SELinux.
+- name: EL | Configure SELinux.
   selinux:
     policy: "{{ item.policy }}"
     state: "{{ item.state }}"
-  with_items: "{{ ec2_setup_selinux }}"
+  with_items: "{{ osbootstrap_selinux }}"
 
-- name: Set timezone
-  file:
-    src: "/usr/share/zoneinfo/{{ ec2_setup_timezone }}"
-    dest: /etc/localtime
-    force: yes
-    state: link
-  when: ec2_setup_timezone is defined
-
-- name: Display OS info before update
-  debug:
-    msg:
-      - "OS: {{ ansible_distribution }}"
-      - "Release: {{ ansible_distribution_version }}"
-      - "Platform: {{ ansible_product_name }}"
-
-- name: Run system update
+- name: EL | Run system update
   yum:
     name: "*"
     state: latest
-  register: ec2_setup_update
-  when: rebootrequired
+    update_cache: true
+  when: reboot
+  register: yum_result
 
-# The list of packages that require a reboot after update:
-# https://access.redhat.com/solutions/27943
-- include: reboot.yml
+- debug:
+    var: yum_result
+
+- name: EL7 | Check if reboot is required
+  command: needs-restarting -r
+  register: needs_restarting
+  changed_when: false
+  failed_when: needs_restarting.rc == 2
   when:
-    - rebootrequired
-    - ec2_setup_update | changed
-    - ( "kernel" in item ) or
-      ( "-firmware-" in item ) or
-      ( "systemd" in item ) or
-      ( "upstart" in item ) or
-      ( "sysvinit" in item ) or
-      ( "glibc" in item ) or
-      ( "hal-" in item )
-  with_items: "{{ ec2_setup_update.results }}"
+    - reboot
+    - ansible_distribution_major_version | version_compare('7', "=")
+
+- name: EL6 | Check if reboot is required
+  set_fact:
+    reboot_needed: true
+  when: "'kernel.' or 'kernel-firmware' or 'glibc.' 'hal.' in item"
+  with_items: "{{ yum_result.results }}"
+
+- name: EL 7 | Reboot target host if needed
+  include: reboot.yml
+  when:
+    - reboot
+    - yum_result | changed
+    - ('Reboot is required' in needs_restarting.stdout)
+    - ansible_distribution_major_version | version_compare('7', '=')
+
+- name: EL 6 | Reboot target host if needed
+  include: reboot.yml
+  when:
+    - reboot
+    - yum_result | changed
+    - reboot_needed
+    - ansible_distribution_major_version | version_compare('6', '=')
