@@ -3,7 +3,7 @@ Role Name: os-bootstrap
 
 [![Build Status](https://travis-ci.org/ichundu/ansible-role-os-bootstrap.svg?branch=master)](https://travis-ci.org/ichundu/ansible-role-os-bootstrap.svg?branch=master)
 
-Bootstrap OS after server provisioning.
+Bootstrap OS after server instance provisioning.
 
 Requirements
 ------------
@@ -23,7 +23,7 @@ Role Variables
   | `osbootstrap_epel_repo` | `{{ osbootstrap_epel_url if ansible_distribution == 'RedHat' else 'epel-release' }}` | EPEL release package name, on CentOS `epel-release` is installed, on RedHat the package from the provided URL is installed instead |
   | `osbootstrap_packages` | `[]` | Packages to install after provisioning, this is an OS-specific vairable and is included dynamically dpending on the distro from the `vars/` directory |
   | `osbootstrap_selinux` | `[ {'policy: targeted', 'state: permissive'} ]` | SELinux default state |
-  | `ec2_bootstrap_packages` | `[ libselinux-python, libsemanage-python, vim, htop, bash-completion, rng-tools ]` | Basic packages that should be installed on every new instance |
+  | `osbootstrap_packages` | *list of packages* | Basic packages that will be installed after instance is launched, OS-specific variable |
   | `osbootstrap_timezone` | `[]` | Timezone region |
   | `osbootstrap_host` | `inventory_hostname` | IP address of target host used in wait_for task |
 
