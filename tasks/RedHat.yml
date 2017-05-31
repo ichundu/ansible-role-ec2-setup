@@ -25,12 +25,8 @@
   yum:
     name: "*"
     state: latest
-    update_cache: true
   when: reboot
   register: yum_result
-
-- debug:
-    var: yum_result
 
 - name: EL7 | Check if reboot is required
   command: needs-restarting -r
@@ -44,21 +40,24 @@
 - name: EL6 | Check if reboot is required
   set_fact:
     reboot_needed: true
-  when: "'kernel.' or 'kernel-firmware' or 'glibc.' 'hal.' in item"
+  when:
+    - reboot
+    - ansible_distribution_major_version | version_compare('6', "<=")
+    - "'kernel.' or 'kernel-firmware' or 'glibc.' 'hal.' in item"
   with_items: "{{ yum_result.results }}"
 
 - name: EL 7 | Reboot target host if needed
   include: reboot.yml
   when:
+    - ansible_distribution_major_version | version_compare('7', '=')
     - reboot
     - yum_result | changed
-    - ('Reboot is required' in needs_restarting.stdout)
-    - ansible_distribution_major_version | version_compare('7', '=')
+    - "'Reboot is required' in needs_restarting.stdout"
 
 - name: EL 6 | Reboot target host if needed
   include: reboot.yml
   when:
+    - ansible_distribution_major_version | version_compare('6', '=')
     - reboot
     - yum_result | changed
     - reboot_needed
-    - ansible_distribution_major_version | version_compare('6', '=')

@@ -1,4 +1,5 @@
 ---
+# RedHat family systems specific variables
 
 osbootstrap_packages:
   - libselinux-python

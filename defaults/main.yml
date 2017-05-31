@@ -18,7 +18,7 @@ osbootstrap_selinux:
     state: enforcing
 
 # Instance timezone
-osbootstrap_timezone: []
+osbootstrap_timezone: "Europe/Berlin"
 
 # IP address of target host used in wait_for task
 osbootstrap_host: "{{ inventory_hostname }}"

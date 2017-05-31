@@ -6,7 +6,7 @@
     that: reboot
 
 - name: Reboot host if we call for a reboot (via /sbin/shutdown)
-  shell: sleep 5 ; /sbin/shutdown -r ; echo &
+  shell: sleep 5; /sbin/shutdown -r now; echo &
   when: ansible_service_mgr != "systemd"
 
 - name: Reboot host if we call for a reboot (via systemd)
@@ -21,8 +21,8 @@
     host: "{{ osbootstrap_host | default(inventory_hostname) }}"
     port: 22
     search_regex: "OpenSSH"
-    timeout: 200
-    delay: 30
+    timeout: 500
+    delay: 60
   become: no
 
 - name: Refresh inventory
